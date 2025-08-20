@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="family-container">
+  {% if not user.family_id %}
+    <div class="no-family">
+      <h2>Вы ещё не в семье</h2>
+      <p>Создайте новую семью или присоединитесь к существующей</p>
+      <div class="family-actions">
+        <a href="{{ url_for('create_family') }}" class="btn">Создать семью</a>
+        <a href="{{ url_for('join_family') }}" class="btn btn-outline">Присоединиться</a>
+      </div>
+    </div>
+  {% else %}
+    <div class="family-banner">
+      <h1>Семья: {{ family.name }}</h1>
+      <label for="leave-family-modal" class="leave-family-btn">Выйти из семьи</label>
+    </div>
+
+    <!-- Чекбокс и модальное окно -->
+    <input type="checkbox" id="leave-family-modal" class="modal-toggle">
+
+    <div class="modal">
+      <div class="modal-content">
+        <p>Вы уверены, что хотите выйти из семьи?<br>Все баллы будут обнулены.</p>
+        <div class="modal-actions">
+          <form method="POST" action="{{ url_for('leave_family') }}">
+            <button type="submit" class="btn btn-danger">Да, выйти</button>
+          </form>
+          <label for="leave-family-modal" class="btn btn-cancel">Отмена</label>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Статистика семьи -->
+    <div class="stats-grid">
+      <div class="stat-card stat-primary">
+        <div class="stat-progress" style="--value: {{ (statistics.start_week / 1000 * 100) }}%"></div>
+        <p>Баллы за неделю</p>
+        <strong>{{ statistics.start_week }}</strong>
+      </div>
+      <div class="stat-card stat-secondary">
+        <div class="stat-progress" style="--value: {{ (statistics.start_month / 5000 * 100) }}%"></div>
+        <p>Баллы за месяц</p>
+        <strong>{{ statistics.start_month }}</strong>
+      </div>
+      <div class="stat-card stat-accent">
+        <div class="stat-progress" style="--value: {{  (statistics.all_time / 20000 * 100) }}%"></div>
+        <p>Всего баллов</p>
+        <strong>{{ statistics.all_time }}</strong>
+      </div>
+    </div>
+
+    <!-- Члены семьи -->
+    <div class="family-members">
+      <h2 class="section-title">Члены семьи <span>{{ lst_users|length }}</span></h2>
+      <div class="members-grid">
+        {% for member in lst_users %}
+        <div class="member-card" style="animation-delay: {{ loop.index * 0.1 }}s">
+          <div class="member-avatar">
+            <img src="{{ url_for('userava', user_id=member.id) }}" alt="{{ member.first_name }}" class="member-photo"/>
+            <div class="member-rank">{{ loop.index }}</div>
+          </div>
+          <h3>{{ member.first_name }} {{ member.last_name }}</h3>
+          <div class="member-stats">
+            <div class="stat-item">
+              <span>Баллы за неделю</span>
+              <strong>{{ score(member.id) }}</strong>
+            </div>
+            <div class="stat-item">
+              <span>Активность</span>
+              <strong>{%if not streak(member.id)[1]%}🔥{%else%}❄️{%endif%}{{streak(member.id)[0]  |default('Нет данных') }}</strong>
+            </div>
+          </div>
+          <div class="top-tasks1">
+            <h4>Топ задач за неделю</h4>
+            <ul>
+              {% for task in best_result_for_week(member.id)[:3] %}
+              <li>
+                <span class="task-name">{{ task.name }}</span>
+                <span class="task-count">{{ task.summa }} раз</span>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Лента активности -->
+    <div class="activity-feed">
+      <h2 class="section-title">Лента активности</h2>
+      <ul class="timeline">
+        {% for task in family_tasks[:10] %}
+        <li class="timeline-item">
+          <div class="timeline-badge"></div>
+          <div class="timeline-content">
+            <span class="user">{{ task.first_name }}</span>
+            <span class="action">выполнил(а)</span>
+            <strong class="task">{{ task.name }}</strong>
+            <span class="points">+{{ task.points }} баллов</span>
+            <time class="time">{{ task.date}}</time>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

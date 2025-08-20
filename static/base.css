@@ -1,0 +1,75 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+/* --- Контейнер --- */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- Шапка --- */
+header {
+    background-color: #4a90e2;
+    color: white;
+    padding: 15px 0;
+}
+
+header .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .logo a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+/* --- Навигация --- */
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: #ffcc00;
+}
+
+/* --- Основной контент --- */
+main {
+    padding: 20px 0;
+    background-color: white;
+}
+
+/* --- Подвал --- */
+footer {
+    background-color: #222;
+    color: #bbb;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 0.9em;
+}
+
+/* --- Мобильная адаптивность --- */
+@media (max-width: 768px) {
+    header .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .nav-links a {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}

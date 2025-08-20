@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 class = "page-title">Редактировать профиль</h2>
+
+    {% for cat, msg in get_flashed_messages(True) %}
+            <div class="flash {{cat}}">{{msg}}</div>
+        {% endfor %}
+
+    <form method="post" enctype="multipart/form-data" class="edit-profile-form">
+        <label for="first_name">Имя</label>
+        <input type="text" id="first_name" name="first_name" placeholder="Введите имя" value="{{ user.first_name }}">
+
+        <label for="last_name">Фамилия</label>
+        <input type="text" id="last_name" name="last_name" placeholder="Введите фамилию" value="{{ user.last_name }}">
+
+        <label for="photo">Фото профиля</label>
+        <input type="file" id="photo" name="photo" accept="image/*">
+
+        <label for="password">Новый пароль</label>
+        <input type="password" id="password" name="password" placeholder="Оставьте пустым, если не меняете">
+
+        <label for="confirm_password">Повторите новый пароль</label>
+        <input type="password" id="confirm_password" name="confirm_password" placeholder="Повторите пароль">
+
+        <button type="submit">Сохранить изменения</button>
+    </form>
+</div>
+{% endblock %}

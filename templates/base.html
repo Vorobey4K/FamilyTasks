@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Семейный Помощник{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+
+<body>
+    {% block scripts %}
+
+    {% endblock %}
+    <header>
+  <div class="container navbar">
+    <h3 class="logo">Семейный Помощник</h3>
+    <nav class="nav-links">
+        {% if current_user.is_authenticated %}
+        {%for i in nav[:-1] %}
+            <a href='{{i.url}}'>{{i.name}}</a>
+        {%endfor%}
+        {%else%}
+        {%for i in nav %}
+            <a href='{{i.url}}'>{{i.name}}</a>
+        {%endfor%}
+        {%endif%}
+
+    </nav>
+  </div>
+</header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Семейный Помощник</p>
+        </div>
+    </footer>
+</body>
+</html>

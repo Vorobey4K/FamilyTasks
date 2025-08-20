@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="profile-container">
+  <!-- 🔹 Профиль: фото + имя -->
+  <div class="profile-header">
+  <img src="{{ url_for('userava') }}" alt="Фото пользователя" class="profile-photo" />
+
+  <div class="profile-info">
+    <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+    <p class="profile-email">{{ user.email }}</p>
+  </div>
+
+  <div class="profile-actions">
+    <a href="{{ url_for('edit_profile') }}" class="profile-btn">⚙️ Редактировать</a>
+    <a href="{{ url_for('logout') }}" class="profile-btn logout">🚪 Выйти</a>
+  </div>
+</div>
+
+  <!-- 🔹 Блок с баллами -->
+  <div class="profile-scores">
+    <div class="score-card">🕒<span>{{ statistics['today'] }}</span><small>Сегодня</small></div>
+    <div class="score-card">📅<span>{{ statistics['start_week'] }}</span><small>Неделя</small></div>
+    <div class="score-card">📆<span>{{ statistics['start_month'] }}</span><small>Месяц</small></div>
+    <div class="score-card">🌟<span>{{ statistics['all_time'] }}</span><small>Всего</small></div>
+  </div>
+
+  <!-- 🔹 Общая статистика -->
+  <div class="stats-summary card">
+    <h3>📊 Общая статистика</h3>
+    <ul>
+      <li>✅ Всего выполнено задач: <strong>{{ stats_summary.total_tasks }}</strong></li>
+      <li>📈 Максимум задач за день: <strong>{{ stats_summary.max_tasks_day }}</strong></li>
+      <li>🔥 Дней с активностью: <strong>{{ stats_summary.active_days }}</strong></li>
+    </ul>
+  </div>
+
+  <!-- 🔹 ТОП задач -->
+  <div class="top-tasks card">
+    <h3>🔥 Самые частые задачи</h3>
+    <ol>
+      {% for task in top_tasks %}
+        <li>{{ task.icon }} {{ task.name }} — <strong>{{ task.summa }}</strong> раз(а)</li>
+      {% endfor %}
+    </ol>
+  </div>
+
+  <!-- 🔹 График активности -->
+  <div class="week-activity card">
+    <h3>🗓 Активность за неделю</h3>
+    <div class="week-row">
+      {% for day in days_activity[0] %}
+        <div class="day-cell">{{ day }}</div>
+      {% endfor %}
+    </div>
+    <div class="week-row">
+      {% for active in days_activity[1] %}
+        <div class="day-cell">{% if active %}✅{% else %}▢{% endif %}</div>
+      {% endfor %}
+    </div>
+  </div>
+
+
+<div class="task-history card">
+  <h3>📜 Последние выполненные задачи</h3>
+
+  <table class="history-table">
+    <thead>
+      <tr>
+        <th>📅 Дата</th>
+        <th>📝 Задача</th>
+        <th>🎯 Баллы</th>
+        <th>🛠 Изменено</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in history %}
+      <tr>
+        <td>{{ format_task_date(task.date) }}</td>
+        <td>{{ task.icon or '📝' }} {{ task.name }}</td>
+        <td class="{% if task.points > 0 %}plus{% elif task.points < 0 %}minus{% endif %}">
+          {{ '+' if task.points > 0 else '' }}{{ task.points }}
+        </td>
+        <td>
+          {% if task.default_points != task.points %}
+            <span class="edited">🟢 Да</span>
+          {% else %}
+            <span class="not-edited">🔴 Нет</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+</section>
+{% endblock %}

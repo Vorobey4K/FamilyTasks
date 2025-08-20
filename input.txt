@@ -1,0 +1,4 @@
+DEPOSIT Ivanov 100
+DEPOSIT Petrov 150
+TRANSFER Ivanov Petrov 50
+BALANCE Petrov
