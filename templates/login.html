@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Вход в аккаунт{% endblock %}
+
+{% block content %}
+ <div class="auth-page">
+    <div class="auth-box">
+      <h2>Войти</h2>
+        {% for cat, msg in get_flashed_messages(True) %}
+            <div class="flash {{cat}}">{{msg}}</div>
+        {% endfor %}
+      <form method="post">
+        <label for="email">Почта</label>
+        <input type="text" id="email" name="email" placeholder="Ваш логин" required>
+
+        <label for="password">Пароль</label>
+        <input type="password" id="password" name="password" placeholder="Ваш пароль" required>
+
+        <div class="remember-me">
+            <input type="checkbox" id="remember" name="remember">
+            <label for="remember">Запомнить меня</label>
+        </div>
+
+        <button type="submit">Войти</button>
+      </form>
+
+      <div class="register">
+        Нет аккаунта? <a href='{{url_for("register")}}'>Зарегистрироваться</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

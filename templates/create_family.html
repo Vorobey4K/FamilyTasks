@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="family-container">
+  <div class="family-form-wrapper">
+    <h2>Создание семьи</h2>
+    <form method="POST" action="{{ url_for('create_family') }}">
+      {% for cat, msg in get_flashed_messages(True) %}
+        <div class="flash {{cat}}">{{msg}}</div>
+      {% endfor %}
+      <label for="family_name">Название семьи</label>
+      <input type="text" id="family_name" name="family_name" placeholder="Введите название вашей семьи" required>
+      <button type="submit" class="btn">Создать</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

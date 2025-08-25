@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="family-container">
+  <div class="families-grid">
+    {% for family in families %}
+      <div class="family-card">
+          <h3>{{ family.name }}</h3>
+          <p>{{ family.len }} участников</p>
+          <form method="POST">
+              <input type="hidden" name="family_id" value="{{ family.id }}">
+              <button type="submit" class="btn">Присоединиться</button>
+          </form>
+      </div>
+      {% endfor %}
+  </div>
+</div>
+{% endblock %}

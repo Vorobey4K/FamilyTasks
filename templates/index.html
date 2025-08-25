@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная - Семейный Помощник{% endblock %}
+
+<!--{% block extra_css %}-->
+<!--<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">-->
+<!--{% endblock %}-->
+
+{% block content %}
+<section class="hero">
+    <h2>Семейный помощник для домашних дел</h2>
+    <p>Получайте баллы, соревнуйтесь и упрощайте быт всей семьей.</p>
+    <a href="#" class="btn">Попробовать сейчас</a>
+</section>
+
+<section class="benefits">
+  <div class="container">
+    <h3>Почему это удобно?</h3>
+    <div class="benefit-list">
+        {% for i in why_us %}
+          <div class="benefit-item">
+            <span class="emoji">{{i.icon}}</span>
+            <p>{{i.description}}</p>
+          </div>
+        {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="how-it-works">
+    <h3>Как работает Семейный Помощник</h3>
+    <div class="steps">
+        {% for step in steps %}
+        <div class="step">
+            <h4>{{ step.title }}</h4>
+            <p>{{ step.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock %}

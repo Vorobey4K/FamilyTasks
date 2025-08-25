@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="info-container"> <!-- общий блок, как в /profile -->
+    <div class="info-card welcome-card">
+        {% if current_user.getFamilyId() and streak[0] != 0 %}
+            {% if streak[1] %}
+                <p class="welcome-line">❄️ Вы уже <strong class="highlight">{{ streak[0] }}</strong> дней в ритме — круто!</p>
+                <p class="welcome-line"> Поддержите стрик, пока он не остыл!</p>
+            {% else %}
+                <p class="welcome-line">Вы уже <strong class="highlight">🔥 {{ streak[0] }}</strong> день помогаете по дому!</p>
+                <p class="welcome-line">Сегодня вы выполнили <strong class="highlight">{{ count_tasks }}</strong> задач — так держать! 💪</p>
+            {% endif %}
+        {% else %}
+            <p class="welcome-line">Рады видеть вас здесь! 🎉</p>
+            <p class="welcome-line">Давайте сделаем домашние дела проще и веселее вместе!</p>
+        {% endif %}
+    </div>
+
+    <div class="info-card points-system">
+        <h2 class="section-title">🏅 Как работает система баллов?</h2>
+            <ul class="points-rules">
+                <li>✅ Добавляйте выполненные задачи и получайте баллы.</li>
+                <li>📈 Чем сложнее задача — тем больше баллов!</li>
+                <li>🎯 В конце недели побеждает тот, кто набрал больше всех.</li>
+                <li>🎁 Награда на выбор: фильм, освобождение от дел или сюрприз!</li>
+            </ul>
+    </div>
+
+    <div class="task-list">
+        <h1>Отметьте выполненное задание</h1>
+
+        <form method="POST">
+            {% for task in tasks %}
+            <div class="task-item">
+                <div class="task-left">
+                    <input type="checkbox" name="task_ids" value="{{ task.id }}" id="task_{{ task.id }}">
+                    <label for="task_{{ task.id }}" class="task-content">
+                        <span class="task-icon">{{ task.icon }}</span>
+                        <span class="task-name">{{ task.name }}</span>
+                    </label>
+                </div>
+                <div class="task-points">
+                    <input type="number" name="points_{{ task.id }}"
+                        value="{{ task.default_points }}" min="1" max="100"
+                        class="points-input">
+                </div>
+            </div>
+            {% endfor %}
+            <button type="submit" class="submit-btn">Отправить выбранные</button>
+        </form>
+    </div>
+
+    <div class="info-card footer-links">
+        <p>📌 Посмотрите свои достижения в <a href="/profile">Профиле</a>.</p>
+        <p>🏆 Соревнуйтесь с семьёй — проверьте, кто лидирует в <a href="/family">Семейном рейтинге</a>!</p>
+    </div>
+</div>
+{% endblock %}
