@@ -1,20 +1,34 @@
 from flask import Flask,render_template,g,request,flash,redirect,url_for,make_response
+
+
 import sqlite3
 from FDataBase import FDataBase
 from flask_login import LoginManager,login_user,login_required,current_user,logout_user
 from UserLogin import UserLogin
 from functools import wraps
 from datetime import datetime
+from extensions import db
+
+
 SECRET_KEY = 'sdifhisdhfiuehui989302uoisdjfjdru20'
 DATABASE = 'instance/basedata.db'
 MAX_CONTENT_LENGTH = 1024 * 1024
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config.from_object(__name__)
+
+
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message = "Авторизуйтесь для доступа к закрытым страницам"
 login_manager.login_message_category = "success"
+
+db.init_app(app)
+
+
+from models import *
+
 
 # def family_required(f):
 #     @wraps(f)
@@ -35,11 +49,19 @@ def index():
 @app.route('/dashboard',methods= ['POST','GET'])
 def dashboard():
     if request.method == 'POST':
+        print(request.form)
         if not current_user.getFamilyId():
             flash('У вас нет семьи','error')
             return redirect(url_for('family'))
-        for i in request.form.getlist('task_ids'):
-            g.dbase.addTask(g.user,i,request.form.getlist(f'points_{i}')[0])
+        for task_id in request.form.getlist('task_ids'):
+            g.dbase.addTask(g.user,task_id,request.form.getlist(f'points_{task_id}')[0])
+            try:
+                u = UserTaskPoints(user_id =g.user, task_id = task_id, custom_points =request.form.getlist(f'points_{task_id}')[0])
+                db.session.add(u)
+                db.session.commit()
+            except Exception as e:
+                print(e)
+                db.session.rollback()
             flash('Задача добавлена','success')
     return render_template('dashboard.html',nav=g.dbase.get_table('nav'),tasks = g.dbase.getTasks(),user=g.dbase.getUser(g.user),family=g.dbase.getFamily(current_user.getFamilyId()),count_tasks = g.dbase.count_tasks_by_day(g.user),streak=g.dbase.get_current_streak(g.user))
 
@@ -67,12 +89,24 @@ def register():
         if not user['password'] == user['confirm_password']:
             flash("Неверный логин или пароль", "error")
             return redirect(url_for('register'))
-
         flash("Вы успешно зарегистрированы!", "success")
         g.dbase.add_user(user)
+        try:
+
+            u = Users(first_name=user['first_name'],last_name = user['last_name'],email=user['email'],password=user['password'],family = Families.query.all()[0] )
+            db.session.add(u)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Ошибка добавления в БД {e}")
         return redirect(url_for('login'))
     return render_template('register.html',nav=g.dbase.get_table('nav'))
 
+
+@app.route('/test')
+def test():
+
+    return str(UserTaskPoints.max_count_day(1,1))
 @app.route('/profile')
 @login_required
 def profile():
@@ -126,6 +160,12 @@ def leave_family():
 def create_family():
     if request.method == 'POST':
         if len(request.form['family_name'])>4:
+            try:
+                f = Families(name=request.form['family_name'])
+                db.session.add(f)
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
             g.dbase.createFamily(request.form['family_name'],g.user)
             return redirect(url_for('family'))
         else:
