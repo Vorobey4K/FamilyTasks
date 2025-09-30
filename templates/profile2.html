@@ -2,7 +2,7 @@
 
 {% block content %}
 <section class="profile-container">
-  <!-- 🔹 Профиль: фото + имя -->
+  <!-- Профиль: фото + имя -->
   <div class="profile-header">
   <img src="{{ url_for('userava') }}" alt="Фото пользователя" class="profile-photo" />
 
@@ -17,15 +17,15 @@
   </div>
 </div>
 
-  <!-- 🔹 Блок с баллами -->
+  <!-- Блок с баллами -->
   <div class="profile-scores">
     <div class="score-card">🕒<span>{{ statistics['today'] }}</span><small>Сегодня</small></div>
-    <div class="score-card">📅<span>{{ statistics['start_week'] }}</span><small>Неделя</small></div>
-    <div class="score-card">📆<span>{{ statistics['start_month'] }}</span><small>Месяц</small></div>
+    <div class="score-card">📅<span>{{ statistics['week'] }}</span><small>Неделя</small></div>
+    <div class="score-card">📆<span>{{ statistics['month'] }}</span><small>Месяц</small></div>
     <div class="score-card">🌟<span>{{ statistics['all_time'] }}</span><small>Всего</small></div>
   </div>
 
-  <!-- 🔹 Общая статистика -->
+  <!-- Общая статистика -->
   <div class="stats-summary card">
     <h3>📊 Общая статистика</h3>
     <ul>
@@ -35,17 +35,17 @@
     </ul>
   </div>
 
-  <!-- 🔹 ТОП задач -->
+  <!--ТОП задач -->
   <div class="top-tasks card">
     <h3>🔥 Самые частые задачи</h3>
     <ol>
       {% for task in top_tasks %}
-        <li>{{ task.icon }} {{ task.name }} — <strong>{{ task.summa }}</strong> раз(а)</li>
+        <li>{{ task.icon }} {{ task.name }} — <strong>{{ task.quantity }}</strong> раз(а)</li>
       {% endfor %}
     </ol>
   </div>
 
-  <!-- 🔹 График активности -->
+  <!-- График активности -->
   <div class="week-activity card">
     <h3>🗓 Активность за неделю</h3>
     <div class="week-row">
@@ -78,8 +78,8 @@
       <tr>
         <td>{{ format_task_date(task.date) }}</td>
         <td>{{ task.icon or '📝' }} {{ task.name }}</td>
-        <td class="{% if task.points > 0 %}plus{% elif task.points < 0 %}minus{% endif %}">
-          {{ '+' if task.points > 0 else '' }}{{ task.points }}
+        <td class="{% if task.custom_points > 0 %}plus{% elif task.custom_points < 0 %}minus{% endif %}">
+          {{ '+' if task.custom_points > 0 else '' }}{{ task.custom_points }}
         </td>
         <td>
           {% if task.default_points != task.points %}

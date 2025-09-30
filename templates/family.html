@@ -35,14 +35,14 @@
     <!-- Статистика семьи -->
     <div class="stats-grid">
       <div class="stat-card stat-primary">
-        <div class="stat-progress" style="--value: {{ (statistics.start_week / 1000 * 100) }}%"></div>
+        <div class="stat-progress" style="--value: {{ (statistics.week / 1000 * 100) }}%"></div>
         <p>Баллы за неделю</p>
-        <strong>{{ statistics.start_week }}</strong>
+        <strong>{{ statistics.week }}</strong>
       </div>
       <div class="stat-card stat-secondary">
-        <div class="stat-progress" style="--value: {{ (statistics.start_month / 5000 * 100) }}%"></div>
+        <div class="stat-progress" style="--value: {{ (statistics.month / 5000 * 100) }}%"></div>
         <p>Баллы за месяц</p>
-        <strong>{{ statistics.start_month }}</strong>
+        <strong>{{ statistics.month  }}</strong>
       </div>
       <div class="stat-card stat-accent">
         <div class="stat-progress" style="--value: {{  (statistics.all_time / 20000 * 100) }}%"></div>
@@ -65,7 +65,7 @@
           <div class="member-stats">
             <div class="stat-item">
               <span>Баллы за неделю</span>
-              <strong>{{ score(member.id) }}</strong>
+              <strong>{{ score(member.id,periods="week").all_time }}</strong>
             </div>
             <div class="stat-item">
               <span>Активность</span>
@@ -75,10 +75,10 @@
           <div class="top-tasks1">
             <h4>Топ задач за неделю</h4>
             <ul>
-              {% for task in best_result_for_week(member.id)[:3] %}
+              {% for task in best_result_for_week(member.id,period='week') %}
               <li>
                 <span class="task-name">{{ task.name }}</span>
-                <span class="task-count">{{ task.summa }} раз</span>
+                <span class="task-count">{{ task.quantity }} раз</span>
               </li>
               {% endfor %}
             </ul>
@@ -99,8 +99,8 @@
             <span class="user">{{ task.first_name }}</span>
             <span class="action">выполнил(а)</span>
             <strong class="task">{{ task.name }}</strong>
-            <span class="points">+{{ task.points }} баллов</span>
-            <time class="time">{{ task.date}}</time>
+            <span class="points">+{{ task.custom_points }} баллов</span>
+            <time class="time">{{ format_task_date(task.date)}}</time>
           </div>
         </li>
         {% endfor %}
