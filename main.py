@@ -2,22 +2,25 @@ from flask import Flask,render_template,g,request,flash,redirect,url_for,make_re
 from werkzeug.security import generate_password_hash,check_password_hash
 
 import sqlite3
-from FDataBase import FDataBase
 from flask_login import LoginManager,login_user,login_required,current_user,logout_user
 from UserLogin import UserLogin
 from functools import wraps
 from datetime import datetime
 from extensions import db
+import os
+
+from dotenv import load_dotenv
+load_dotenv()
 
 
-SECRET_KEY = 'sdifhisdhfiuehui989302uoisdjfjdru20'
-DATABASE = 'instance/basedata.db'
-MAX_CONTENT_LENGTH = 1024 * 1024
+
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+app.config['SQLALCHEMY_DATABASE_URI'] =  os.getenv("DATABASE_URL", "sqlite:///database.db")
 app.config['DEFAULT_AVATAR'] = 'static/images/default.jpg'
-app.config.from_object(__name__)
+app.config['MAX_CONTENT_LENGTH'] = int(os.getenv("MAX_CONTENT_LENGTH", 1024*1024))
+
 
 
 login_manager = LoginManager(app)
@@ -272,6 +275,8 @@ def format_task_date(datetime_str):
     else:
         return f"{day} {month} {dt.year} в {time_str}"
 
+with app.app_context():
+    db.create_all()
 
 if __name__ == '__main__':
     app.run(debug=True)
