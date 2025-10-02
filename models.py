@@ -63,9 +63,11 @@ class UserTaskPoints(db.Model):
             "week": lambda q: q.filter(cls.completed_at >= today - timedelta(days=7)),
             "month": lambda q: q.filter(cls.completed_at >= today.replace(day=1)),
         }
+
         if periods is None:
             return filters
-        return {key: filters[key] for key in periods if key in filters}
+
+        return {key: filters[key] for key in periods if key in filters.keys()}
 
 
     @classmethod
@@ -87,7 +89,6 @@ class UserTaskPoints(db.Model):
             result[key] = filter_func(all_time_query).scalar() or 0
 
         result['all_time'] = all_time_query.scalar() or 0
-        print(result)
         return result
 
 
@@ -136,27 +137,33 @@ class UserTaskPoints(db.Model):
             .order_by(func.date(cls.completed_at).desc()) \
             .all()
 
-        #dates = [datetime.strptime(d[0], "%Y-%m-%d").date() for d in dates]
+        dates = [d[0] for d in dates]
+
+        # Приводим к date
+        dates = [datetime.strptime(dt, "%Y-%m-%d").date() if isinstance(dt, str) else dt for dt in dates]
+
         today = date.today()
 
         if mode == 'days_total':
             return len(dates)
 
         if not dates and mode == 'streak':
-            return [0]
+            return [0,True]
 
         if mode == 'streak':
+
             streak = 0
             freeze = False
             flag = dates[0] if dates else None
 
             if dates[0] == today:
+
                 streak = 1
             elif dates[0] == today - timedelta(days=1):
                 streak = 1
                 freeze = True
             else:
-                return 0
+                return streak,True
 
             for dt in dates[1:]:
                 if flag - dt == timedelta(days=1):

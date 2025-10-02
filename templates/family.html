@@ -65,7 +65,7 @@
           <div class="member-stats">
             <div class="stat-item">
               <span>Баллы за неделю</span>
-              <strong>{{ score(member.id,periods="week").all_time }}</strong>
+              <strong>{{ score(member.id,periods=["week"]).week }}</strong>
             </div>
             <div class="stat-item">
               <span>Активность</span>
