@@ -136,7 +136,7 @@ class UserTaskPoints(db.Model):
             .order_by(func.date(cls.completed_at).desc()) \
             .all()
 
-        dates = [datetime.strptime(d[0], "%Y-%m-%d").date() for d in dates]
+        #dates = [datetime.strptime(d[0], "%Y-%m-%d").date() for d in dates]
         today = date.today()
 
         if mode == 'days_total':
