@@ -133,7 +133,7 @@ class UserTaskPoints(db.Model):
         dates = db.session.query(func.date(cls.completed_at)) \
             .filter(cls.user_id == user_id) \
             .group_by(func.date(cls.completed_at)) \
-            .order_by(func.date(cls.completed_at.desc())) \
+            .order_by(func.date(cls.completed_at).desc()) \
             .all()
 
         dates = [datetime.strptime(d[0], "%Y-%m-%d").date() for d in dates]
