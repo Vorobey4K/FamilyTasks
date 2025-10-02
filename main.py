@@ -153,24 +153,36 @@ def userava(user_id = None):
     h = make_response(img)
     h.headers['Content_Type'] = 'image/png'
     return h
-@app.route('/edit_profile',methods=['POST','GET'])
+@app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
-    if request.method == "POST":
-        id = g.user
-        if request.files['photo']:
-            img = request.files['photo'].read()
-            g.dbase.updateUserAvatar(img, id)
+    user = db.session.get(current_user.get_id())
+    if request.method == "POST" and user:
 
-        g.dbase.updateUserName(request.form['first_name'],request.form['last_name'],id)
-        if request.form['password']:
-            if request.form['password'] == request.form['confirm_password']:
-                g.dbase.updateUserPasword(request.form['password'],id)
+        photo = request.files.get('photo')
+        if photo and photo.filename:
+            user.avatar = photo.read()
+
+        user.first_name = request.form.get('first_name', user.first_name)
+        user.last_name = request.form.get('last_name', user.last_name)
+
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        if password:
+            if password == confirm_password:
+                user.password = generate_password_hash(password)
+            else:
+                flash("Пароли не совпадают!", "error")
+                return redirect(url_for('edit_profile'))
+
+        db.session.commit()
         return redirect(url_for('profile'))
-    return render_template('edit_profile.html',
-                           nav=g.nav,
-                           user=g.user)
 
+    return render_template(
+        'edit_profile.html',
+        nav=g.nav,
+        user=g.user
+    )
 @app.route('/family')
 @login_required
 def family():
