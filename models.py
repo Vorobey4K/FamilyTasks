@@ -209,11 +209,11 @@ class Navigation(db.Model):
 class Steps(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(30), nullable=False)
-    description = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(80), nullable=False)
 
 
 
 class Why_us(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    icon = db.Column(db.String(5))
+    icon = db.Column(db.String(7))
     description = db.Column(db.String(50), nullable=False)
