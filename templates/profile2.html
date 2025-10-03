@@ -82,7 +82,7 @@
           {{ '+' if task.custom_points > 0 else '' }}{{ task.custom_points }}
         </td>
         <td>
-          {% if task.default_points != task.points %}
+          {%if task.custom_points  != task.Tasks.default_points %}
             <span class="edited">🟢 Да</span>
           {% else %}
             <span class="not-edited">🔴 Нет</span>

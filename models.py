@@ -61,7 +61,7 @@ class UserTaskPoints(db.Model):
         filters = {
             "today": lambda q: q.filter(func.date(cls.completed_at) == today),
             "week": lambda q: q.filter(cls.completed_at >= today - timedelta(days=7)),
-            "month": lambda q: q.filter(cls.completed_at >= today.replace(day=1)),
+            "month": lambda q: q.filter(cls.completed_at >= today - timedelta(days=30)),
         }
 
         if periods is None:

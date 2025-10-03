@@ -122,6 +122,7 @@ def profile():
     days_activity = UserTaskPoints.get_user_activity(g.user_id,'weekly')
     top_task = UserTaskPoints.get_most_completed_tasks(g.user_id)
     history = UserTaskPoints.get_last_tasks(g.user_id)
+    print(history)
     stats_summary = {'total_tasks': UserTaskPoints.get_task_count(g.user_id),
                      'max_tasks_day': UserTaskPoints.max_count_day(g.user_id),
                      'active_days': UserTaskPoints.get_user_activity(g.user_id,mode='days_total')}
