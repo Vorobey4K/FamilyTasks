@@ -24,8 +24,6 @@ class Users(db.Model):
         user = db.session.query(Users.password) \
             .filter(Users.email == email) \
             .scalar()
-        print(user)
-        print(password)
         if check_password_hash(user,password) and user:
             return user
         return False
@@ -34,6 +32,9 @@ class Families(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20),nullable = False)
 
+
+    def family_length(self):
+        return len(db.session.query(Users.id).filter(Users.family_id == self.id).all())
 
 
 

@@ -108,13 +108,7 @@ def register():
                            nav=g.nav)
 
 
-@app.route('/test')
-def test():
-    user = db.session.get(Users,current_user.get_id())
-    if user:
-        user.family_id = 2
-        db.session.commit()
-    return str('Привет')
+
 @app.route('/profile')
 @login_required
 def profile():
@@ -122,7 +116,6 @@ def profile():
     days_activity = UserTaskPoints.get_user_activity(g.user_id,'weekly')
     top_task = UserTaskPoints.get_most_completed_tasks(g.user_id)
     history = UserTaskPoints.get_last_tasks(g.user_id)
-    print(history)
     stats_summary = {'total_tasks': UserTaskPoints.get_task_count(g.user_id),
                      'max_tasks_day': UserTaskPoints.max_count_day(g.user_id),
                      'active_days': UserTaskPoints.get_user_activity(g.user_id,mode='days_total')}
@@ -187,10 +180,12 @@ def edit_profile():
 @app.route('/family')
 @login_required
 def family():
-    return render_template('family.html',nav=g.nav,
+    users = Users.query.filter(Users.family_id == current_user.getFamilyId()).all()
+    return render_template('family.html',
+                           nav=g.nav,
                            user=g.user,
                            family=db.session.get(Families,current_user.getFamilyId()),
-                           lst_users=Users.query.filter(Users.family_id == current_user.getFamilyId()).all(),
+                           lst_users= sorted(users, key=lambda user:UserTaskPoints.get_scores(user.id,periods=['week'])['week'] , reverse=True),
                            score=UserTaskPoints.get_scores,
                            best_result_for_week = UserTaskPoints.get_most_completed_tasks,
                            family_tasks = UserTaskPoints.get_last_tasks(current_user.getFamilyId(),scope='family'),
