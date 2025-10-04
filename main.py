@@ -78,12 +78,15 @@ def login():
         user = Users.query.filter(Users.email == frm['email']).first()
         print(user)
         if user:
-            userlogin = UserLogin().fromDB(user)
-            rm = True if request.form.get('remember') else False
-            login_user(userlogin, remember=rm)
-            return redirect(url_for('profile'))
+            if check_password_hash(user.password, frm['password']):
+                userlogin = UserLogin().fromDB(user)
+                rm = True if request.form.get('remember') else False
+                login_user(userlogin, remember=rm)
+                return redirect(url_for('profile'))
+            else:
+                flash('Неверный пароль.', 'error')
         else:
-            flash('Неверный логин или пароль. Попробуйте ещё раз.','error')
+            flash('Пользователь с таким email не найден.', 'error')
     return render_template('login.html',
                             nav=g.nav)
 
@@ -93,6 +96,9 @@ def register():
         user = request.form
         if not user['password'] == user['confirm_password']:
             flash("Неверный логин или пароль", "error")
+            return redirect(url_for('register'))
+        if Users.query.filter_by(email=user['email']).first():
+            flash("Пользователь с таким email уже существует","error")
             return redirect(url_for('register'))
         try:
             password = generate_password_hash(user['password'])
@@ -124,7 +130,7 @@ def profile():
                            nav=g.nav,
                            user=g.user,
                            statistics = statistics,
-                           days_activity =days_activity ,
+                           days_activity =days_activity,
                            top_tasks = top_task,
                            stats_summary=stats_summary,
                            history=history,

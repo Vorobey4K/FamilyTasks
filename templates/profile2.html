@@ -77,7 +77,7 @@
       {% for task in history %}
       <tr>
         <td>{{ format_task_date(task.date) }}</td>
-        <td>{{ task.icon or '📝' }} {{ task.name }}</td>
+        <td>{{ task.Tasks.icon or '📝' }} {{ task.Tasks.name }}</td>
         <td class="{% if task.custom_points > 0 %}plus{% elif task.custom_points < 0 %}minus{% endif %}">
           {{ '+' if task.custom_points > 0 else '' }}{{ task.custom_points }}
         </td>
