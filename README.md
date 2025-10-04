@@ -46,7 +46,8 @@ Email: danila02527@gmail.com
 
 ## ⚙️ Технологии
 
-- **Backend:** Flask, SQLAlchemy  
+- **Backend:** Flask, SQLAlchemy
+- **Auth:** Flask-Login  
 - **Database:** PostgreSQL  
 - **Frontend:** HTML, Jinja2, CSS  
 - **Deploy:** Render  
