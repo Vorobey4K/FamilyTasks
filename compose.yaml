@@ -1,0 +1,40 @@
+services:
+  family_tasks:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    image: family_tasks
+    container_name: family_tasks
+    restart: always
+    env_file:
+      - app/.env
+    links:
+      - "postgres:${POSTGRES_HOST}"
+    networks:
+      - backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: psgr
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  postgres-data:
+
+
+
