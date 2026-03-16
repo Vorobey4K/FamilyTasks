@@ -1,7 +1,7 @@
-from main import db
+from extensions import db
 from datetime import  datetime,date, timedelta
 from sqlalchemy import func
-from werkzeug.security import generate_password_hash,check_password_hash
+from werkzeug.security import check_password_hash
 
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)

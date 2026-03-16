@@ -17,7 +17,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
-app.config['SQLALCHEMY_DATABASE_URI'] =  os.getenv("DATABASE_URL", "sqlite:///database.db")
+app.config['SQLALCHEMY_DATABASE_URI'] =  os.getenv("DATABASE_URL")
 app.config['DEFAULT_AVATAR'] = 'static/images/default.jpg'
 app.config['MAX_CONTENT_LENGTH'] = int(os.getenv("MAX_CONTENT_LENGTH", 1024*1024))
 
@@ -31,7 +31,7 @@ login_manager.login_message_category = "success"
 db.init_app(app)
 
 
-from models import *
+from models import Why_us,Steps,UserTaskPoints,Tasks,Users,Families,Navigation
 
 
 @app.route('/')
@@ -293,4 +293,4 @@ with app.app_context():
     db.create_all()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=8000)

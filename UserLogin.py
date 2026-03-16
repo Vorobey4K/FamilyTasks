@@ -1,4 +1,5 @@
 from flask_login import UserMixin
+
 class UserLogin(UserMixin):
     def fromDB(self, user):
         self.__user = user
@@ -15,7 +16,7 @@ class UserLogin(UserMixin):
         img = None
         if not self.__user.avatar:
             try:
-                with open('static/images/default.jpg','rb') as f:
+                with open('static/images/default.jpg', 'rb') as f:
                     img = f.read()
             except FileNotFoundError as e:
                 print('Не найдет автор по умолчанию')
