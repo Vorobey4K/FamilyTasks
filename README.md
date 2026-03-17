@@ -21,8 +21,8 @@
 ### 1. Клонировать репозиторий
 
 ```bash
-git clone https://github.com/your-username/familytasks.git
-cd familytasks
+git clone https://github.com/Vorobey4K/familytasks-flask-docker.git
+cd familytasks-flask-docker
 ```
 
 ### 2. Настроить переменные окружения
