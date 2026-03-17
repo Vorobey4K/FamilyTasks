@@ -7,7 +7,7 @@ services:
     container_name: family_tasks
     restart: always
     env_file:
-      - app/.env
+      - .env
     links:
       - "postgres:${POSTGRES_HOST}"
     networks:
@@ -16,7 +16,6 @@ services:
       - "8000:8000"
     depends_on:
       - postgres
-
   postgres:
     image: postgres:17-alpine
     container_name: psgr

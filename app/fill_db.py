@@ -16,12 +16,24 @@ with open("db.json", "r", encoding="utf-8") as f:
 
 # Важное исправление — контекст приложения
 with app.app_context():
-    for table_name, rows in data.items():
-        Model = models_map.get(table_name)
-        if not Model:
-            continue
+    # 🔥 проверка — есть ли данные хотя бы в одной таблице
+    if (
+        db.session.query(Tasks).first()
+        or db.session.query(Navigation).first()
+        or db.session.query(Steps).first()
+        or db.session.query(Why_us).first()
+    ):
+        print("База уже заполнена, пропускаем сидинг")
+    else:
+        print("Заполняем базу...")
 
-        for row in rows:
-            db.session.add(Model(**row))
+        for table_name, rows in data.items():
+            Model = models_map.get(table_name)
+            if not Model:
+                continue
 
-    db.session.commit()
+            for row in rows:
+                db.session.add(Model(**row))
+
+        db.session.commit()
+        print("База успешно заполнена!")
