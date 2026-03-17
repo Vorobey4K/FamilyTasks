@@ -30,7 +30,7 @@ cd familytasks-flask-docker
 ```bash
 cp .env.example .env
 ```
-# Заполните .env своими значениями
+``Заполните .env своими значениями``
 
 ### 3. Запустить проект
 
